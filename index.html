@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <!-- font-awesome -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="./css/style.css">
+    <title>Todo Dashboard</title>
+</head>
+
+<body>
+
+    <div class="row my-4">
+        <div class="col d-flex justify-content-center">
+            <div id="form" class="p-4">
+                <form>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="taskOwner">Owner</label>
+                                <select class="form-control" id="taskOwner">
+                                    <option>Mike</option>
+                                    <option>Ellen</option>
+                                    <option>Mikaella</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="taskType">Task Type</label>
+                                <select class="form-control" id="taskType">
+                                    <option>Default</option>
+                                    <option>Urgent</option>
+                                    <option>Non-Urgent</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="taskName">Task Name</label>
+                                <input type="text" class="form-control" id="taskName"></input>
+                            </div>
+                            <button class="btn btn-primary btn-default" id="submit_button" type="Submit">Submit</button>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="exampleFormControlTextarea1">Note</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+<!-- //END FORM -->
+
+<!-- BEGIN CHARTAREA -->
+<div class="col border-left border-bottom">
+        <div id="chartArea" class="text-center"><span class="font-weight-bold"><ins>CHARTAREA</ins></span></div>
+    </div>
+    <!-- END CHARTAREA -->
+
+
+
+
+    </div>
+    
+
+
+    <div class="row my-4">
+        <!-- BEGIN ACTIVE -->
+        <div class="col border-right">
+            <div id="active" class="text-center"><span class="font-weight-bold"><ins>ACTIVE</ins></span>
+                <div id="activeTask" class="activeTask"></div>
+            </div>
+        </div>
+        <!-- END ACTIVE -->
+
+        <!-- BEGIN COMPLETED -->
+        <div class="col">
+            <div id="archived" class="text-center"><span class="font-weight-bold"><ins>COMPLETED</ins></span></div>
+        </div>
+        <!-- END COMPLETED -->
+
+        
+
+    </div>
+
+
+    <!-- jQuery minified.  From code.jquery.com, not the Bootstrap site!! -->
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous"></script>
+    <!-- Popper -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"
+        crossorigin="anonymous"></script>
+    <!-- Bootstrap -getbootstrap.com -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
+        crossorigin="anonymous"></script>
+    <script>
+        $(document).ready(function () {
+
+
+            $(document).on('click', "#submit_button", function () {
+                event.preventDefault()
+                $("#activeTask").append("<li class='delete'>" + $("#taskName").val().trim() + "<i class='px-3 fas fa-thumbs-up complete'></i><i class='px-3 fas fa-trash-alt deleteX'></i></li>")
+                $("#taskName").val("")
+            })
+
+
+
+            $(document).on('click', ".deleteX", function () {
+                $(this).parent().remove()
+            })
+
+            $(document).on('click', ".complete", function () {
+                var completedItem = $(this).parent().text()
+                              
+
+               
+
+                $("#archived").append("<li>" + completedItem + "<i class='px-3 fas fa-trash-alt deleteX'></li>")
+                $(this).parent().remove()
+                
+            })
+
+
+        }) 
+    </script>
+</body>
+
+</html>

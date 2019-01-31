@@ -1,0 +1,10 @@
+#form{
+    
+    border: solid 1px rgb(216, 207, 207);
+    border-radius: 5%;
+}
+
+#active, #completed, #chartArea{
+    height: 100px;
+    
+}
