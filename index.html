@@ -6,20 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <!-- font-awesome -->
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
-   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO"
         crossorigin="anonymous">
     <link rel="stylesheet" href="./css/style.css">
+
     <title>Todo Dashboard</title>
+    <script>
+    </script>
+
+
+
+
 </head>
 
 <body>
 
     <div class="row my-4">
-        <div class="col d-flex justify-content-center">
-            <div id="form" class="p-4">
+        <div class="col-4 d-flex justify-content-center">
+
+            <div id="form" class="px-5 py-2 bg-warning">
+                <div class="display-4">Todo&Charts.JS</div>
+
                 <form>
-                    <div class="row">
+                    <div class="row form-group">
                         <div class="col">
                             <div class="form-group">
                                 <label for="taskOwner">Owner</label>
@@ -32,66 +43,65 @@
                         </div>
                         <div class="col">
                             <div class="form-group">
-                                <label for="taskType">Task Type</label>
-                                <select class="form-control" id="taskType">
-                                    <option>Default</option>
-                                    <option>Urgent</option>
-                                    <option>Non-Urgent</option>
-                                </select>
+                                <label for="taskName">Task Name</label>
+                                <input type="text" class="form-control" id="taskName"></input>
                             </div>
                         </div>
                     </div>
                     <div class="row">
+
                         <div class="col">
                             <div class="form-group">
-                                <label for="taskName">Task Name</label>
-                                <input type="text" class="form-control" id="taskName"></input>
-                            </div>
-                            <button class="btn btn-primary btn-default" id="submit_button" type="Submit">Submit</button>
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <label for="exampleFormControlTextarea1">Note</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                <label for="taskNote">Note</label>
+                                <textarea class="form-control" id="taskNote" rows="3"></textarea>
                             </div>
                         </div>
 
                     </div>
+                    <button class="btn btn-primary btn-default" id="submit_button" type="Submit">Submit</button>
+
                 </form>
             </div>
         </div>
-<!-- //END FORM -->
+        <!-- //END FORM -->
 
-<!-- BEGIN CHARTAREA -->
-<div class="col border-left border-bottom">
-        <div id="chartArea" class="text-center"><span class="font-weight-bold"><ins>CHARTAREA</ins></span></div>
-    </div>
-    <!-- END CHARTAREA -->
-
-
-
-
-    </div>
-    
-
-
-    <div class="row my-4">
-        <!-- BEGIN ACTIVE -->
-        <div class="col border-right">
-            <div id="active" class="text-center"><span class="font-weight-bold"><ins>ACTIVE</ins></span>
-                <div id="activeTask" class="activeTask"></div>
+        <!-- BEGIN CHARTAREA -->
+        <div class="col border-left border-bottom">
+            <div id="chartArea" class="text-center"><span class="font-weight-bold"><ins>CHARTAREA</ins></span>
             </div>
         </div>
-        <!-- END ACTIVE -->
+        <!-- END CHARTAREA -->
 
-        <!-- BEGIN COMPLETED -->
-        <div class="col">
-            <div id="archived" class="text-center"><span class="font-weight-bold"><ins>COMPLETED</ins></span></div>
+    </div>
+
+    <div class="container">
+        <div class="row my-4">
+            <!-- BEGIN ACTIVE -->
+            <div class="col">
+                <h4 class="text-center font-weight-bold">
+                    <ins>Tasks</ins>
+                </h4>
+                <div id="activeTask" class="activeTask">
+                    <table class="text-center table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Task Name</th>
+                                <th>Owner</th>
+                                <th>Notes</th>
+                                <th>Completed</th>
+                                <th>Delete</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activeTaskTable">
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- </div> -->
+            <!-- END ACTIVE -->
+
         </div>
-        <!-- END COMPLETED -->
-
-        
-
     </div>
 
 
@@ -104,35 +114,110 @@
     <!-- Bootstrap -getbootstrap.com -->
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
+    <script src="https://canvasjs.com/assets/script/jquery-1.11.1.min.js"></script>
+    <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
     <script>
-        $(document).ready(function () {
 
+
+
+        $(document).ready(function () {
+            // window.onload = function () {
+
+
+
+            // }
+
+            var activeArr = []
+            var completedArr = []
 
             $(document).on('click', "#submit_button", function () {
                 event.preventDefault()
-                $("#activeTask").append("<li class='delete'>" + $("#taskName").val().trim() + "<i class='px-3 fas fa-thumbs-up complete'></i><i class='px-3 fas fa-trash-alt deleteX'></i></li>")
+
+                var newTask = {
+                    owner: $("#taskOwner").val(),
+                    taskName: $('#taskName').val(),
+                    taskNote: $('#taskNote').val()
+                }
+
+                var dynamicTaskToAdd = ("<tr><td>" + newTask.taskName + "</td><td>" + newTask.owner + "</td><td>" + newTask.taskNote + "</td>")
+
+                $("#activeTaskTable").append(dynamicTaskToAdd + "<td><i class='px-3 fas fa-thumbs-up complete'></i></td><td><i class='px-3 fas fa-trash-alt deleteX'></i></td></tr>")
                 $("#taskName").val("")
-            })
+                $("#taskNote").val("")
+                $("#date-input").val("")
 
+                activeArr.push(newTask)
 
-
-            $(document).on('click', ".deleteX", function () {
-                $(this).parent().remove()
+                cleanedActiveChartData(activeArr)
             })
 
             $(document).on('click', ".complete", function () {
-                var completedItem = $(this).parent().text()
-                              
+                alert("click")
+                $(this).parent().parent().toggleClass(".completedTask")
 
-               
+            })
 
-                $("#archived").append("<li>" + completedItem + "<i class='px-3 fas fa-trash-alt deleteX'></li>")
-                $(this).parent().remove()
-                
+            $(document).on('click', ".deleteX", function () {
+                $(this).parent().parent().remove()
             })
 
 
-        }) 
+
+
+
+            function cleanedActiveChartData(arr) {
+                var namesCountArr = []
+
+                var nameArr = arr.map(array => {
+                    if (!arr.includes(array.owner)) {
+                        return array.owner
+                    }
+                })
+                .count()
+                console.log(nameArr)
+                return nameArr
+            }
+
+
+
+
+
+
+
+
+            var options = {
+                title: {
+                    text: "% of Active Tasks by Owner"
+                },
+
+                animationEnabled: true,
+                data: [{
+                    type: "pie",
+                    startAngle: 40,
+                    toolTipContent: "<b>{label}</b>: {y}",
+                    showInLegend: "true",
+                    legendText: "{label}",
+                    indexLabelFontSize: 16,
+                    indexLabel: "{label} - {y}",
+                    dataPoints: [
+                        // for (var i=0;i<activeChartData.length;i++){
+
+                        // }
+                    ]
+                    // [
+                    // {y:2, label: "Mike"},
+                    // {y:3, label: "Mika"},
+                    // {y:2, label: "Ellen"},
+
+                    // ]
+                }]
+            };
+            $("#chartArea").CanvasJSChart(options);
+        })
+
+
+
+
     </script>
 </body>
 
