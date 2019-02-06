@@ -4,16 +4,15 @@
     border-radius: 5%;
 }
 
-#activeTask, #chartArea{
-    height: 400px;
+#activeTask, #chartAreaActive,#chartAreaCompleted{
+    height: 450px;
     /* background-color: rgb(220, 236, 231); */
     margin:5px;
 }
 
 .completedTask {
     text-decoration: line-through;
-    color:gray;
-    
+    color:rgb(219, 208, 208);
 }
 
 

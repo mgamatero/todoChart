@@ -24,7 +24,7 @@
 <body>
 
     <div class="row my-4">
-        <div class="col-4 d-flex justify-content-center">
+        <div class="col-12 col-lg-4 d-flex justify-content-center">
 
             <div id="form" class="px-5 py-2 bg-warning">
                 <div class="display-4">Todo&Charts.JS</div>
@@ -44,7 +44,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="taskName">Task Name</label>
-                                <input type="text" class="form-control" id="taskName"></input>
+                                <input type="text" class="form-control" id="taskName" required></input>
                             </div>
                         </div>
                     </div>
@@ -53,7 +53,7 @@
                         <div class="col">
                             <div class="form-group">
                                 <label for="taskNote">Note</label>
-                                <textarea class="form-control" id="taskNote" rows="3"></textarea>
+                                <textarea class="form-control" id="taskNote" rows="3" default="Notes"></textarea>
                             </div>
                         </div>
 
@@ -66,8 +66,12 @@
         <!-- //END FORM -->
 
         <!-- BEGIN CHARTAREA -->
-        <div class="col border-left border-bottom">
-            <div id="chartArea" class="text-center"><span class="font-weight-bold"><ins>CHARTAREA</ins></span>
+        <div class="col-12 col-lg-4 border-left border-bottom">
+            <div id="chartAreaActive" class="text-center"><span class="font-weight-bold"><ins>ACTIVE%</ins></span>
+            </div>
+        </div>
+        <div class="col-12 col-lg-4 border-left border-bottom">
+            <div id="chartAreaCompleted" class="text-center"><span class="font-weight-bold"><ins>COMPLETED%</ins></span>
             </div>
         </div>
         <!-- END CHARTAREA -->
@@ -129,6 +133,9 @@
 
             var activeArr = []
             var completedArr = []
+            var indexID = 0
+
+
 
             $(document).on('click', "#submit_button", function () {
                 event.preventDefault()
@@ -136,83 +143,104 @@
                 var newTask = {
                     owner: $("#taskOwner").val(),
                     taskName: $('#taskName').val(),
-                    taskNote: $('#taskNote').val()
+                    taskNote: $('#taskNote').val(),
+                    taskIndex: indexID
                 }
 
-                var dynamicTaskToAdd = ("<tr><td>" + newTask.taskName + "</td><td>" + newTask.owner + "</td><td>" + newTask.taskNote + "</td>")
-
-                $("#activeTaskTable").append(dynamicTaskToAdd + "<td><i class='px-3 fas fa-thumbs-up complete'></i></td><td><i class='px-3 fas fa-trash-alt deleteX'></i></td></tr>")
+                var dynamicTaskToAdd = (`<tr value=${newTask.taskIndex}><td> ${newTask.taskName}  </td><td> ${newTask.owner} </td><td> ${newTask.taskNote} </td>`)
+                $("#activeTaskTable").append(dynamicTaskToAdd + `<td><i class="px-3 fas fa-thumbs-up complete"></i></td><td><i class="px-3 fas fa-trash-alt deleteX"></i></td></tr>`)
                 $("#taskName").val("")
                 $("#taskNote").val("")
                 $("#date-input").val("")
 
                 activeArr.push(newTask)
-
-                cleanedActiveChartData(activeArr)
+                cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
+                console.log(activeArr)
+                indexID++
+                renderChart()
             })
 
-            $(document).on('click', ".complete", function () {
-                alert("click")
-                $(this).parent().parent().toggleClass(".completedTask")
+            $(document).on('click', ".complete", function (event) {
 
+                $(this).closest('tr').toggleClass("completedTask")
+                if ($(this).closest('tr').hasClass("completedTask")) {
+                    alert('you got class')
+                    var taskIndexToComplete = $(this).closest('tr').attr("value")
+                    var indexInActiveArrayToComplete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToComplete))
+                    console.log('taskIndexToComplete = ' + taskIndexToComplete + '  IndexInActiveArray = ' + indexInActiveArrayToComplete)
+
+                    activeArr.splice(indexInActiveArrayToComplete, 1)
+                    console.log('ActiveArr after complete = ' + JSON.stringify(activeArr))
+                }               
+                cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
+                renderChart()
             })
 
             $(document).on('click', ".deleteX", function () {
+                var taskIndexToRemove = $(this).closest('tr').attr("value")
+                var indexInActiveArrayToDelete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
+                activeArr.splice(indexInActiveArrayToDelete, 1)
+
+                console.log('ActiveArr after delete = ' + JSON.stringify(activeArr))
+
+                cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
+                renderChart()
+
                 $(this).parent().parent().remove()
             })
 
 
+            function getUserTaskFrequency(arr) {
+                var formattedArrayToJSON = {}
+                for (var i = 0; i < arr.length; i++) {
+                    formattedArrayToJSON[arr[i].owner] = (formattedArrayToJSON[arr[i].owner] || 0) + 1
+                }
 
-
-
-            function cleanedActiveChartData(arr) {
-                var namesCountArr = []
-
-                var nameArr = arr.map(array => {
-                    if (!arr.includes(array.owner)) {
-                        return array.owner
-                    }
-                })
-                .count()
-                console.log(nameArr)
-                return nameArr
+                return (formattedArrayToJSON)
             }
 
 
 
+            var cleanedActiveArrayToJSON = []
+            var dataPoints = []
 
 
+            function renderChart() {
 
+                dataPoints = []
 
+                for (key in cleanedActiveArrayToJSON) {
+                    dataPoints.push({ label: key, y: cleanedActiveArrayToJSON[key] });
 
-            var options = {
-                title: {
-                    text: "% of Active Tasks by Owner"
-                },
+                }
 
-                animationEnabled: true,
-                data: [{
-                    type: "pie",
-                    startAngle: 40,
-                    toolTipContent: "<b>{label}</b>: {y}",
-                    showInLegend: "true",
-                    legendText: "{label}",
-                    indexLabelFontSize: 16,
-                    indexLabel: "{label} - {y}",
-                    dataPoints: [
-                        // for (var i=0;i<activeChartData.length;i++){
+                var options = {
+                    title: {
+                        text: "% of Active Tasks by Owner"
+                    },
 
-                        // }
-                    ]
-                    // [
-                    // {y:2, label: "Mike"},
-                    // {y:3, label: "Mika"},
-                    // {y:2, label: "Ellen"},
+                    animationEnabled: true,
+                    data: [{
+                        type: "pie",
+                        startAngle: 40,
+                        toolTipContent: "<b>{label}</b>: {y}",
+                        showInLegend: "true",
+                        legendText: "{label}",
+                        indexLabelFontSize: 16,
+                        indexLabel: "{label} - {y}",
+                        dataPoints: dataPoints
 
-                    // ]
-                }]
-            };
-            $("#chartArea").CanvasJSChart(options);
+                        // sample hardcoded data - for reference only
+                        // [
+                        //     { y: 2, label: "Mike" },
+                        //     { y: 3, label: "Mika" },
+                        //     { y: 2, label: "Ellen" },
+
+                        // ]
+                    }]
+                };
+                $("#chartAreaActive").CanvasJSChart(options);
+            }
         })
 
 
