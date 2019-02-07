@@ -158,7 +158,7 @@
                 renderChart()
             })
 
-            $(document).on('click', ".complete", function (event) {
+            $(document).on('touchend click', ".complete", function (event) {
                 if (!$(this).closest('tr').hasClass("completedTask")) {
                     alert("Class")
                     $(this).closest('tr').addClass("completedTask")
@@ -183,7 +183,7 @@
                 }
             })
 
-            $(document).on('click', ".deleteX", function () {
+            $(document).on('touchend click', ".deleteX", function () {
                 var taskIndexToRemove = $(this).closest('tr').attr("value")
                 if (!$(this).closest('tr').hasClass("completedTask")) {
                 var indexInActiveArrayToDelete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
