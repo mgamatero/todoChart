@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <title>Todo Dashboard</title>
-  
+
 </head>
 
 <body>
@@ -132,7 +132,7 @@
 
 
 
-            $(document).on('click', "#submit_button", function () {
+            $(document).on('touchstart click', "#submit_button", function () {
                 event.preventDefault()
 
                 var newTask = {
@@ -143,7 +143,10 @@
                 }
 
                 var dynamicTaskToAdd = (`<tr value=${newTask.taskIndex}><td> ${newTask.taskName}  </td><td> ${newTask.owner} </td><td> ${newTask.taskNote} </td>`)
-                $("#activeTaskTable").append(dynamicTaskToAdd + `<td><i class="px-3 fas fa-thumbs-up complete"></i></td><td><i class="px-3 fas fa-trash-alt deleteX"></i></td></tr>`)
+                $(this).fadeOut(100, function () {
+                    $("#activeTaskTable").append(dynamicTaskToAdd + `<td><i class="px-3 fas fa-thumbs-up complete"></i></td><td><i class="px-3 fas fa-trash-alt deleteX"></i></td></tr>`)
+                })
+
                 $("#taskName").val("")
                 $("#taskNote").val("")
                 $("#date-input").val("")
@@ -158,9 +161,9 @@
                 renderChart()
             })
 
-            $(document).on('touchend click', ".complete", function (event) {
+            $(document).on('touchstart click', ".complete", function (event) {
                 if (!$(this).closest('tr').hasClass("completedTask")) {
-                    alert("Class")
+                    // alert("Class")
                     $(this).closest('tr').addClass("completedTask")
                     var taskIndexToComplete = $(this).closest('tr').attr("value")
                     var indexInActiveArrayToComplete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToComplete))
@@ -178,37 +181,35 @@
 
                     renderChart()
                 }
-                else {
-                    alert("No class")
-                }
+                // else {
+                //     alert("No class")
+                // }
             })
 
-            $(document).on('touchend click', ".deleteX", function () {
+            $(document).on('touchstart click', ".deleteX", function () {
                 var taskIndexToRemove = $(this).closest('tr').attr("value")
                 if (!$(this).closest('tr').hasClass("completedTask")) {
-                var indexInActiveArrayToDelete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
-                activeArr.splice(indexInActiveArrayToDelete, 1)
+                    var indexInActiveArrayToDelete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
+                    activeArr.splice(indexInActiveArrayToDelete, 1)
 
-                // console.log('ActiveArr after delete = ' + JSON.stringify(activeArr))
+                    // console.log('ActiveArr after delete = ' + JSON.stringify(activeArr))
 
-                cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
+                    cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
                 }
-                else{
-                var indexInCompletedArrayToDelete = completedArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
-                
-                console.log('indexInCompletedArrayToDelete after delete = ' + taskIndexToRemove)
-                
-                completedArr.splice(indexInCompletedArrayToDelete, 1)
+                else {
+                    var indexInCompletedArrayToDelete = completedArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
 
-                console.log('completedArr after delete = ' + JSON.stringify(completedArr))
+                    console.log('indexInCompletedArrayToDelete after delete = ' + taskIndexToRemove)
 
-                cleanedCompletedArrayToJSON = getUserTaskFrequency(completedArr)
+                    completedArr.splice(indexInCompletedArrayToDelete, 1)
+
+                    console.log('completedArr after delete = ' + JSON.stringify(completedArr))
+
+                    cleanedCompletedArrayToJSON = getUserTaskFrequency(completedArr)
                 }
-
-
                 renderChart()
 
-                $(this).fadeOut(500,function(){
+                $(this).fadeOut(100, function () {
                     $(this).parent().parent().remove()
                 })
             })
