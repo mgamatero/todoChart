@@ -15,4 +15,9 @@
     color:rgb(219, 208, 208);
 }
 
+.border{
+    color:rgb(148, 145, 145);
+    border-width: 3px;
+}
+
 

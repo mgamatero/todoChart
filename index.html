@@ -13,12 +13,7 @@
     <link rel="stylesheet" href="./css/style.css">
 
     <title>Todo Dashboard</title>
-    <script>
-    </script>
-
-
-
-
+  
 </head>
 
 <body>
@@ -26,8 +21,8 @@
     <div class="row my-4">
         <div class="col-12 col-lg-4 d-flex justify-content-center">
 
-            <div id="form" class="px-5 py-2 bg-light">
-                <div class="display-4">Todo&Charts.JS</div>
+            <div id="form" class="p-3 m-3 bg-light">
+                <div class="h4 text-center">Todo&Charts.JS</div>
 
                 <form>
                     <div class="row form-group">
@@ -66,11 +61,11 @@
         <!-- //END FORM -->
 
         <!-- BEGIN CHARTAREA -->
-        <div class="col-12 col-lg-4 border-left border-bottom">
+        <div class="col-12 col-lg-4 border">
             <div id="chartAreaActive" class="text-center"><span class="font-weight-bold"><ins>ACTIVE%</ins></span>
             </div>
         </div>
-        <div class="col-12 col-lg-4 border-left border-bottom">
+        <div class="col-12 col-lg-4 border">
             <div id="chartAreaCompleted" class="text-center"><span class="font-weight-bold"><ins>COMPLETED%</ins></span>
             </div>
         </div>
@@ -85,8 +80,8 @@
                 <h4 class="text-center font-weight-bold">
                     <ins>Tasks</ins>
                 </h4>
-                <div id="activeTask" class="activeTask">
-                    <table class="text-center table table-striped table-hover">
+                <div id="activeTask" class="activeTask table-responsive">
+                    <table class="text-center table table-striped table-bordered ">
                         <thead>
                             <tr>
                                 <th>Task Name</th>
@@ -212,7 +207,10 @@
 
 
                 renderChart()
-                $(this).parent().parent().remove()
+
+                $(this).fadeOut(500,function(){
+                    $(this).parent().parent().remove()
+                })
             })
 
 
