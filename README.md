@@ -11,7 +11,7 @@ Charts are updated realtime as they go through different cycles of being complet
 
 ## Built with
 
-* HTML, CSS, Bootstrap 4.0
+* HTML, CSS, jQuery, Bootstrap 4.0
 * [Canvas.js](https://canvasjs.com/) - Used to create charts
 
 ## Author
