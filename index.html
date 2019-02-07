@@ -26,7 +26,7 @@
 
                 <form>
                     <div class="row form-group">
-                        <div class="col">
+                        <div class="col-5">
                             <div class="form-group">
                                 <label for="taskOwner">Owner</label>
                                 <select class="form-control" id="taskOwner">
@@ -36,7 +36,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="col">
+                        <div class="col-7">
                             <div class="form-group">
                                 <label for="taskName">Task Name</label>
                                 <input type="text" class="form-control" id="taskName" required></input>
@@ -44,7 +44,6 @@
                         </div>
                     </div>
                     <div class="row">
-
                         <div class="col">
                             <div class="form-group">
                                 <label for="taskNote">Note</label>
@@ -53,7 +52,7 @@
                         </div>
 
                     </div>
-                    <button class="btn btn-primary btn-default" id="submit_button" type="Submit">Submit</button>
+                    <button class="btn btn-primary btn-block" id="submit_button" type="Submit">Submit</button>
 
                 </form>
             </div>
@@ -80,8 +79,8 @@
                 <h4 class="text-center font-weight-bold">
                     <ins>Tasks</ins>
                 </h4>
-                <div id="activeTask" class="activeTask table-responsive">
-                    <table class="text-center table table-striped table-bordered ">
+                <div id="activeTask" class="activeTask table-responsive table-sm">
+                    <table class="text-center table table-striped table-bordered">
                         <thead>
                             <tr>
                                 <th>Task Name</th>
@@ -132,7 +131,7 @@
 
 
 
-            $(document).on('touchstart click', "#submit_button", function () {
+            $(document).on('touchend click', "#submit_button", function () {
                 event.preventDefault()
 
                 var newTask = {
@@ -141,12 +140,8 @@
                     taskNote: $('#taskNote').val(),
                     taskIndex: indexID
                 }
-
                 var dynamicTaskToAdd = (`<tr value=${newTask.taskIndex}><td> ${newTask.taskName}  </td><td> ${newTask.owner} </td><td> ${newTask.taskNote} </td>`)
-                $(this).fadeOut(100, function () {
-                    $("#activeTaskTable").append(dynamicTaskToAdd + `<td><i class="px-3 fas fa-thumbs-up complete"></i></td><td><i class="px-3 fas fa-trash-alt deleteX"></i></td></tr>`)
-                })
-
+                $("#activeTaskTable").append(dynamicTaskToAdd + `<td><i class="px-3 fas fa-thumbs-up complete"></i></td><td><i class="px-3 fas fa-trash-alt deleteX"></i></td></tr>`)
                 $("#taskName").val("")
                 $("#taskNote").val("")
                 $("#date-input").val("")
@@ -161,7 +156,9 @@
                 renderChart()
             })
 
-            $(document).on('touchstart click', ".complete", function (event) {
+
+
+            $(document).on('touchend click', ".complete", function (event) {
                 if (!$(this).closest('tr').hasClass("completedTask")) {
                     // alert("Class")
                     $(this).closest('tr').addClass("completedTask")
@@ -186,7 +183,7 @@
                 // }
             })
 
-            $(document).on('touchstart click', ".deleteX", function () {
+            $(document).on('touchend click', ".deleteX", function () {
                 var taskIndexToRemove = $(this).closest('tr').attr("value")
                 if (!$(this).closest('tr').hasClass("completedTask")) {
                     var indexInActiveArrayToDelete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
@@ -209,9 +206,8 @@
                 }
                 renderChart()
 
-                $(this).fadeOut(100, function () {
-                    $(this).parent().parent().remove()
-                })
+                $(this).parent().parent().remove()
+
             })
 
 
@@ -293,14 +289,10 @@
                     }]
                 };
 
-
-
-
-
                 $("#chartAreaActive").CanvasJSChart(optionsDoughnut);
                 $("#chartAreaCompleted").CanvasJSChart(optionsColumn);
             }
-        })
+        });
 
 
 
