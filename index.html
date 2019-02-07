@@ -26,7 +26,7 @@
     <div class="row my-4">
         <div class="col-12 col-lg-4 d-flex justify-content-center">
 
-            <div id="form" class="px-5 py-2 bg-warning">
+            <div id="form" class="px-5 py-2 bg-light">
                 <div class="display-4">Todo&Charts.JS</div>
 
                 <form>
@@ -154,38 +154,64 @@
                 $("#date-input").val("")
 
                 activeArr.push(newTask)
+
+                //used by datapoints global array for canvas.js.  just do it!
                 cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
+
                 console.log(activeArr)
                 indexID++
                 renderChart()
             })
 
             $(document).on('click', ".complete", function (event) {
-
-                $(this).closest('tr').toggleClass("completedTask")
-                if ($(this).closest('tr').hasClass("completedTask")) {
-                    alert('you got class')
+                if (!$(this).closest('tr').hasClass("completedTask")) {
+                    alert("Class")
+                    $(this).closest('tr').addClass("completedTask")
                     var taskIndexToComplete = $(this).closest('tr').attr("value")
                     var indexInActiveArrayToComplete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToComplete))
-                    console.log('taskIndexToComplete = ' + taskIndexToComplete + '  IndexInActiveArray = ' + indexInActiveArrayToComplete)
+                    // console.log('taskIndexToComplete = ' + taskIndexToComplete + '  IndexInActiveArray = ' + indexInActiveArrayToComplete)
 
-                    activeArr.splice(indexInActiveArrayToComplete, 1)
-                    console.log('ActiveArr after complete = ' + JSON.stringify(activeArr))
-                }               
-                cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
-                renderChart()
+                    var completedItem = activeArr.splice(indexInActiveArrayToComplete, 1)
+                    // console.log('CompletedItem after complete = ' + JSON.stringify(completedItem))
+
+                    cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
+
+                    completedArr.push(completedItem[0])
+                    // console.log('CompletedItem after 1 = ' + JSON.stringify(completedArr))
+                    cleanedCompletedArrayToJSON = getUserTaskFrequency(completedArr)
+                    // console.log('CompletedItem after 2 = ' + JSON.stringify(cleanedCompletedArrayToJSON))
+
+                    renderChart()
+                }
+                else {
+                    alert("No class")
+                }
             })
 
             $(document).on('click', ".deleteX", function () {
                 var taskIndexToRemove = $(this).closest('tr').attr("value")
+                if (!$(this).closest('tr').hasClass("completedTask")) {
                 var indexInActiveArrayToDelete = activeArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
                 activeArr.splice(indexInActiveArrayToDelete, 1)
 
-                console.log('ActiveArr after delete = ' + JSON.stringify(activeArr))
+                // console.log('ActiveArr after delete = ' + JSON.stringify(activeArr))
 
                 cleanedActiveArrayToJSON = getUserTaskFrequency(activeArr)
-                renderChart()
+                }
+                else{
+                var indexInCompletedArrayToDelete = completedArr.findIndex(i => i.taskIndex === parseInt(taskIndexToRemove))
+                
+                console.log('indexInCompletedArrayToDelete after delete = ' + taskIndexToRemove)
+                
+                completedArr.splice(indexInCompletedArrayToDelete, 1)
 
+                console.log('completedArr after delete = ' + JSON.stringify(completedArr))
+
+                cleanedCompletedArrayToJSON = getUserTaskFrequency(completedArr)
+                }
+
+
+                renderChart()
                 $(this).parent().parent().remove()
             })
 
@@ -195,40 +221,43 @@
                 for (var i = 0; i < arr.length; i++) {
                     formattedArrayToJSON[arr[i].owner] = (formattedArrayToJSON[arr[i].owner] || 0) + 1
                 }
-
                 return (formattedArrayToJSON)
             }
 
-
-
             var cleanedActiveArrayToJSON = []
-            var dataPoints = []
+            var cleanedCompletedArrayToJSON = []
+
+
 
 
             function renderChart() {
+                var dataPointsActive = []
+                var dataPointsCompleted = []
 
-                dataPoints = []
 
                 for (key in cleanedActiveArrayToJSON) {
-                    dataPoints.push({ label: key, y: cleanedActiveArrayToJSON[key] });
-
+                    dataPointsActive.push({ label: key, y: cleanedActiveArrayToJSON[key] });
                 }
 
-                var options = {
+                for (key in cleanedCompletedArrayToJSON) {
+                    dataPointsCompleted.push({ label: key, y: cleanedCompletedArrayToJSON[key] });
+                }
+
+                var optionsDoughnut = {
                     title: {
-                        text: "% of Active Tasks by Owner"
+                        text: "Active % by User"
                     },
 
                     animationEnabled: true,
                     data: [{
-                        type: "pie",
+                        type: "doughnut",
                         startAngle: 40,
                         toolTipContent: "<b>{label}</b>: {y}",
                         showInLegend: "true",
                         legendText: "{label}",
                         indexLabelFontSize: 16,
                         indexLabel: "{label} - {y}",
-                        dataPoints: dataPoints
+                        dataPoints: dataPointsActive
 
                         // sample hardcoded data - for reference only
                         // [
@@ -239,7 +268,38 @@
                         // ]
                     }]
                 };
-                $("#chartAreaActive").CanvasJSChart(options);
+
+                var optionsColumn = {
+                    title: {
+                        text: "Completed Tasks"
+                    },
+
+                    animationEnabled: true,
+                    data: [{
+                        type: "column",
+                        toolTipContent: "<b>{label}</b>: {y}",
+                        // showInLegend: "true",
+                        legendText: "{label}",
+                        indexLabelFontSize: 16,
+                        // indexLabel: "{label} - {y}",
+                        dataPoints: dataPointsCompleted
+
+                        // sample hardcoded data - for reference only
+                        // [
+                        //     { y: 2, label: "Mike" },
+                        //     { y: 3, label: "Mika" },
+                        //     { y: 2, label: "Ellen" },
+
+                        // ]
+                    }]
+                };
+
+
+
+
+
+                $("#chartAreaActive").CanvasJSChart(optionsDoughnut);
+                $("#chartAreaCompleted").CanvasJSChart(optionsColumn);
             }
         })
 
